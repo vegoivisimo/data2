@@ -123,32 +123,23 @@ tesla_data.head()
 # ----------------------------------------------------------
 # 2. Extract Tesla revenue data via Web Scraping
 # ------------------------------------------------------
+url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/revenue.htm"
+tesla_revenue_data = requests.get(url).text
 
+tesla_revenue_soup = BeautifulSoup(tesla_revenue_data, 'html.parser')
+tesla_revenue = pd.DataFrame(columns=['Date','Revenue'])
+for row in tesla_revenue_soup.find_all("tbody")[1].find_all('tr'):
+    col = row.find_all("td")
+    revenue = col[1].text
+    date = col[0].text
+    
 
+    tesla_revenue = pd.concat([tesla_revenue, pd.DataFrame({"Date":[date], "Revenue" : [revenue]})], ignore_index = True)
+    tesla_revenue["Revenue"] = tesla_revenue["Revenue"].str.replace(',|\$',"", regex=True)
+    tesla_revenue.dropna()
 
-
-# URL with the revenue table for Tesla
-url_tesla_rev = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/revenue.htm"
-
-tables = pd.read_html(url_tesla_rev)
-
-tesla_rev = tables[0].copy()
-
-# Rename columns for clarity
-tesla_rev.columns = ["Date", "Revenue"]
-
-# Remove repeated header rows
-tesla_rev = tesla_rev[tesla_rev["Revenue"] != "Revenue"]
-
-tesla_rev["Date"] = pd.to_datetime(tesla_rev["Date"])
-
-tesla_rev["Revenue"] = (
-    tesla_rev["Revenue"]
-    .str.replace(r"[\$,]", "", regex=True)
-    .astype(float)
-)
-# Display first 5 row 
-tesla_rev.head()
+tesla_revenue = tesla_revenue[tesla_revenue["Revenue"] != ""]
+tesla_revenue.tail()
 ```
 
 
@@ -178,35 +169,33 @@ tesla_rev.head()
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>1970-01-01 00:00:00.000002021</td>
-      <td>53823.0</td>
+      <th>48</th>
+      <td>2010-09-30</td>
+      <td>31</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>1970-01-01 00:00:00.000002020</td>
-      <td>31536.0</td>
+      <th>49</th>
+      <td>2010-06-30</td>
+      <td>28</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>1970-01-01 00:00:00.000002019</td>
-      <td>24578.0</td>
+      <th>50</th>
+      <td>2010-03-31</td>
+      <td>21</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>1970-01-01 00:00:00.000002018</td>
-      <td>21461.0</td>
+      <th>52</th>
+      <td>2009-09-30</td>
+      <td>46</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>1970-01-01 00:00:00.000002017</td>
-      <td>11759.0</td>
+      <th>53</th>
+      <td>2009-06-30</td>
+      <td>27</td>
     </tr>
   </tbody>
 </table>
 </div>
-
-
 
 
 ```python
@@ -321,26 +310,23 @@ gme_data.head()
 # ------------------------------------------
 # 4. Extract GameStop revenue data via Web Scraping
 # ----------------------------------------------------------
-url_gme_rev = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/stock.html"
+url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/stock.html"
+tesla_revenue_data = requests.get(url).text
 
-tables = pd.read_html(url_gme_rev)
+tesla_revenue_soup = BeautifulSoup(tesla_revenue_data, 'html.parser')
+tesla_revenue = pd.DataFrame(columns=['Date','Revenue'])
+for row in tesla_revenue_soup.find_all("tbody")[1].find_all('tr'):
+    col = row.find_all("td")
+    revenue = col[1].text
+    date = col[0].text
+    
 
-gme_rev = tables[0].copy()
+    tesla_revenue = pd.concat([tesla_revenue, pd.DataFrame({"Date":[date], "Revenue" : [revenue]})], ignore_index = True)
+    tesla_revenue["Revenue"] = tesla_revenue["Revenue"].str.replace(',|\$',"", regex=True)
+    tesla_revenue.dropna()
 
-gme_rev.columns = ["Date", "Revenue"]
-
-gme_rev = gme_rev[gme_rev["Revenue"] != "Revenue"]
-
-gme_rev["Date"] = pd.to_datetime(gme_rev["Date"])
-
-# Clean 'Revenue' column: remove '$' and ',' then convert to float
-gme_rev["Revenue"] = (
-    gme_rev["Revenue"]
-    .str.replace(r"[\$,]", "", regex=True)
-    .astype(float)
-)
-
-gme_rev.head()
+tesla_revenue = tesla_revenue[tesla_revenue["Revenue"] != ""]
+tesla_revenue.tail()
 ```
 
 
@@ -370,34 +356,33 @@ gme_rev.head()
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>1970-01-01 00:00:00.000002020</td>
-      <td>6466.0</td>
+      <th>57</th>
+      <td>2006-01-31</td>
+      <td>1667</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>1970-01-01 00:00:00.000002019</td>
-      <td>8285.0</td>
+      <th>58</th>
+      <td>2005-10-31</td>
+      <td>534</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>1970-01-01 00:00:00.000002018</td>
-      <td>8547.0</td>
+      <th>59</th>
+      <td>2005-07-31</td>
+      <td>416</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>1970-01-01 00:00:00.000002017</td>
-      <td>7965.0</td>
+      <th>60</th>
+      <td>2005-04-30</td>
+      <td>475</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>1970-01-01 00:00:00.000002016</td>
-      <td>9364.0</td>
+      <th>61</th>
+      <td>2005-01-31</td>
+      <td>709</td>
     </tr>
   </tbody>
 </table>
 </div>
-
 
 
 
